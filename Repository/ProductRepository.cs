@@ -24,45 +24,62 @@ namespace ProductInventoryApp.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public bool CreateProduct(Product product)
         {
-            throw new NotImplementedException();
+            _context.Add(product);
+            return Save();
+        }
+        public Product GetById(int Productid)
+        {
+            return _context.Products.Where(p => p.Id == Productid).FirstOrDefault();
         }
 
-        public Product GetById(int id)
+        public bool ProductExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.Products.Any(p => p.Id == id);
         }
-
-    
 
         public void Update(Product product)
         {
             throw new NotImplementedException();
         }
-        //public void Add(Product product)
-        //{
-        //  throw new NotImplementedException();
-        //}
 
-        //public void Delete(int id)
-        //{
-        //  throw new NotImplementedException();
-        //}
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public IEnumerable<Product> GetAll()
-        //{
-        //    return _products;
-        //}
+        public Product GetByName(string Productname)
+        {
+            return _context.Products.Where(p => p.Name == Productname).FirstOrDefault();
+        }
 
-        //public Product GetById(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Product GetByDescription(string Productdescription)
+        {
+            return _context.Products.Where(p => p.Description == Productdescription).FirstOrDefault();
+        }
 
-        // public void Update(Product product)
-        //{
-        //   throw new NotImplementedException();
-        //}
+        public Product GetByPrice(decimal Productprice)
+        {
+            return _context.Products.Where(p => p.Price == Productprice).FirstOrDefault();
+        }
+
+        public Product GetByQuantity(int Productquantity)
+        {
+            return _context.Products.Where(p => p.Quantity == Productquantity).FirstOrDefault();
+        }
+
+       
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved >= 0 ? true : false;
+        }
+
+        Product IProductRepository.CreateProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
     } 
 }

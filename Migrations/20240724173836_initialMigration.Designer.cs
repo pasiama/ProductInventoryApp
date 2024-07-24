@@ -8,11 +8,11 @@ using ProductInventoryApp.DatabaseContext;
 
 #nullable disable
 
-namespace ProductInventoryApp.Data.Migrations
+namespace ProductInventoryApp.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240723142719_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240724173836_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,32 @@ namespace ProductInventoryApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Description1",
+                            Name = "Product1",
+                            Price = 10.0m,
+                            Quantity = 100
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Description1",
+                            Name = "Product2",
+                            Price = 20.0m,
+                            Quantity = 200
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Description1",
+                            Name = "Product3",
+                            Price = 30.0m,
+                            Quantity = 300
+                        });
                 });
 #pragma warning restore 612, 618
         }

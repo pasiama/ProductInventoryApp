@@ -28,7 +28,7 @@ namespace ProductInventoryApp
             //Register db
             builder.Services.AddDbContext<ApplicationContext>(
                 options => {
-                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
                 });
 
             var app = builder.Build();

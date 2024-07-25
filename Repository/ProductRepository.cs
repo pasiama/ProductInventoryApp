@@ -12,10 +12,18 @@ namespace ProductInventoryApp.Repository
         _context = context;
         }
 
-        public ICollection<Product> GetProducts()
+        public async Task<List<Product>>  GetProducts()
         {
-
-            return _context.Products.OrderBy(p => p.Id).ToList();
+            try
+            {
+                return _context.Products.OrderBy(p => p.Id).ToList();
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new List<Product>();
+            }
+            
         }
 
         public void Add(Product product)
@@ -29,9 +37,17 @@ namespace ProductInventoryApp.Repository
             _context.Add(product);
             return Save();
         }
-        public Product GetById(int Productid)
+        public async Task<Product> GetById(int Productid)
         {
-            return _context.Products.Where(p => p.Id == Productid).FirstOrDefault();
+            try 
+            {
+                return  _context.Products.Where(p => p.Id == Productid).FirstOrDefault();
+            } catch (Exception ex)
+            {
+            Console.WriteLine(ex.Message);
+                return new Product();
+            }
+            
         }
 
         public bool ProductExists(int id)
@@ -39,45 +55,134 @@ namespace ProductInventoryApp.Repository
             return _context.Products.Any(p => p.Id == id);
         }
 
-        public void Update(Product product)
+        public async Task<Product> GetByName(string Productname)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Products.Where(p => p.Name == Productname).FirstOrDefault();
+            } catch (Exception ex) 
+            {
+            Console.WriteLine(ex.Message);
+                return new Product();
+            }
+           
         }
 
-        public void Delete(int id)
+        public async Task<Product> GetByDescription(string Productdescription)
         {
-            throw new NotImplementedException();
+            try 
+            {
+                return _context.Products.Where(p => p.Description == Productdescription).FirstOrDefault();
+            }
+            catch(Exception ex)
+            {
+            Console.WriteLine(ex.Message);
+                return new Product();
+            }
+            
         }
 
-        public Product GetByName(string Productname)
+        public async Task<Product> GetByPrice(decimal Productprice)
         {
-            return _context.Products.Where(p => p.Name == Productname).FirstOrDefault();
+            try
+            {
+                return _context.Products.Where(p => p.Price == Productprice).FirstOrDefault();
+            } catch (Exception ex) 
+            {
+            Console.WriteLine(ex.Message);
+                return new Product();
+            }
+            
         }
 
-        public Product GetByDescription(string Productdescription)
+        public async Task<Product> GetByQuantity(int Productquantity)
         {
-            return _context.Products.Where(p => p.Description == Productdescription).FirstOrDefault();
+            try 
+            {
+                return _context.Products.Where(p => p.Quantity == Productquantity).FirstOrDefault();
+            } catch (Exception ex) {
+            Console.WriteLine(ex.Message);
+                return new Product();
+            }
+            
         }
 
-        public Product GetByPrice(decimal Productprice)
+        public async Task<Product> DeleteProduct(Product product)
         {
-            return _context.Products.Where(p => p.Price == Productprice).FirstOrDefault();
+            try
+            {
+
+               _context.Products.Remove(product);
+                _context.SaveChanges();
+                return product;
+            } catch (Exception ex) {
+               Console.WriteLine(ex.Message);
+                return new Product();
+            }
         }
 
-        public Product GetByQuantity(int Productquantity)
-        {
-            return _context.Products.Where(p => p.Quantity == Productquantity).FirstOrDefault();
-        }
 
-       
 
-        public bool Save()
+        public  bool  Save()
         {
             var saved = _context.SaveChanges();
             return saved >= 0 ? true : false;
         }
 
         Product IProductRepository.CreateProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateProduct(Product product)
+        {
+            _context.Products.Update(product);
+            return Save();
+        }
+
+
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IProductRepository.Update(Product product)
+        {
+            _context.Products.Update(product);
+            
+        }
+
+        ICollection<Product> IProductRepository.GetProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.GetByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.GetByDescription(string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.GetByPrice(decimal price)
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.GetByQuantity(int quantity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Product IProductRepository.DeleteProduct(Product product)
         {
             throw new NotImplementedException();
         }

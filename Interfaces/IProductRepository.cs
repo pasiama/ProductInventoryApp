@@ -14,10 +14,17 @@ namespace ProductInventoryApp.Interfaces
         Product GetByQuantity(int quantity);
         bool ProductExists(int id);
 
+       
+
 
 
         Product CreateProduct(Product product);
         bool Save();
+
+
+        bool UpdateProduct(Product product);
+
+        Product DeleteProduct(Product product);
 
 
         void Add(Product product);

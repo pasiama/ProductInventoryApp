@@ -18,10 +18,10 @@ namespace ProductInventoryApp.Controllers
         //RETURNS A LIST OF PRODUCTS
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         { 
         
-            var products = _productRepository.GetProducts();
+            var products =  _productRepository.GetProducts();
 
             if (!ModelState.IsValid)
             {
@@ -35,7 +35,7 @@ namespace ProductInventoryApp.Controllers
         //CREATES A PRODUCT
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(Product))]
-        public IActionResult CreateProduct([FromBody] Product product)
+        public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
             if (product == null)
             {
@@ -51,11 +51,41 @@ namespace ProductInventoryApp.Controllers
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
+        //UPDATES A PRODUCT
+        [HttpPut("{productId}")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        {
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            if (id != product.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_productRepository.ProductExists(id))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _productRepository.Update(product);
+            return NoContent();
+        }
+
+
 
         //RETURNS A PRODUCT BY ID
-        /*[HttpGet("{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Product))]
-        public IActionResult GetProduct(int Productid)
+        public async Task<IActionResult> GetProduct(int Productid)
         {
             var product = _productRepository.GetById(Productid);
             if(!_productRepository.ProductExists(Productid))
@@ -69,7 +99,27 @@ namespace ProductInventoryApp.Controllers
             }
 
             return Ok(product);
-        }*/
+        }
+
+
+        //DELETES A PRODUCT
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            if (!_productRepository.ProductExists(id))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _productRepository.Delete(id);
+            return NoContent();
+        }
 
 
         //RETURNS A PRODUCT BY NAME
@@ -154,54 +204,9 @@ namespace ProductInventoryApp.Controllers
         //CREATES A PRODUCT
         /*
 
-         //UPDATES A PRODUCT
-         [HttpPut("{id}")]
-         [ProducesResponseType(204)]
-         public IActionResult PutProduct(int id, Product product)
-         {
-             if (product == null)
-             {
-                 return BadRequest();
-             }
-
-             if (id != product.Id)
-             {
-                 return BadRequest();
-             }
-
-             if (!_productRepository.ProductExists(id))
-             {
-                 return NotFound();
-             }
-
-             if (!ModelState.IsValid)
-             {
-                 return BadRequest(ModelState);
-             }
-
-             _productRepository.Update(product);
-             return NoContent();
-         }
+        
 
 
-         //DELETES A PRODUCT
-         [HttpDelete("{id}")]
-         [ProducesResponseType(204)]
-         public IActionResult DeleteProduct(int id)
-         {
-             if (!_productRepository.ProductExists(id))
-             {
-                 return NotFound();
-             }
-
-             if (!ModelState.IsValid)
-             {
-                 return BadRequest(ModelState);
-             }
-
-             _productRepository.Delete(id);
-             return NoContent();
-         }
 
          //DELETES A PRODUCT BY NAME
          [HttpDelete("{name}")]

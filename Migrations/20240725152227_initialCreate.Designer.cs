@@ -11,8 +11,8 @@ using ProductInventoryApp.DatabaseContext;
 namespace ProductInventoryApp.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240724173836_initialMigration")]
-    partial class initialMigration
+    [Migration("20240725152227_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

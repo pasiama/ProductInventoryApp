@@ -146,21 +146,9 @@ namespace ProductInventoryApp.Repository
             throw new NotImplementedException();
         }
 
-        void IProductRepository.Update(Product product)
-        {
-            _context.Products.Update(product);
-            
-        }
+       
 
-        ICollection<Product> IProductRepository.GetProducts()
-        {
-            throw new NotImplementedException();
-        }
 
-        Product IProductRepository.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         Product IProductRepository.GetByName(string name)
         {
@@ -182,9 +170,6 @@ namespace ProductInventoryApp.Repository
             throw new NotImplementedException();
         }
 
-        Product IProductRepository.DeleteProduct(Product product)
-        {
-            throw new NotImplementedException();
-        }
+      
     } 
 }

@@ -4,8 +4,8 @@ namespace ProductInventoryApp.Interfaces
 {
     public interface IProductRepository
     {
-        ICollection<Product> GetProducts();
-        Product GetById(int id);
+        Task<List<Product>> GetProducts();
+        Task<Product> GetById(int Productid);
 
         Product GetByName(string name);
 
@@ -13,22 +13,16 @@ namespace ProductInventoryApp.Interfaces
         Product GetByPrice(decimal price);
         Product GetByQuantity(int quantity);
         bool ProductExists(int id);
-
-       
-
-
-
         Product CreateProduct(Product product);
         bool Save();
 
 
         bool UpdateProduct(Product product);
 
-        Product DeleteProduct(Product product);
+        Task<Product> DeleteProduct(Product product);
 
 
         void Add(Product product);
-        void Update(Product product);
         void Delete(int id);
     }
 }

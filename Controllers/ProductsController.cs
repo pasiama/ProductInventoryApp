@@ -52,7 +52,7 @@ namespace ProductInventoryApp.Controllers
         }
 
         //UPDATES A PRODUCT
-        [HttpPut("{productId}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(204)]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
@@ -76,7 +76,7 @@ namespace ProductInventoryApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            _productRepository.Update(product);
+            _productRepository.UpdateProduct(product);
             return NoContent();
         }
 
@@ -85,10 +85,10 @@ namespace ProductInventoryApp.Controllers
         //RETURNS A PRODUCT BY ID
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Product))]
-        public async Task<IActionResult> GetProduct(int Productid)
+        public async Task<IActionResult> GetProduct(int id)
         {
-            var product = _productRepository.GetById(Productid);
-            if(!_productRepository.ProductExists(Productid))
+            var product = _productRepository.GetById(id);
+            if(!_productRepository.ProductExists(id))
             {
                 return NotFound();
             }

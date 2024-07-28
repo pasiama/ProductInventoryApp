@@ -7,11 +7,12 @@ namespace ProductInventoryApp
     public class Seed
     {
 
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
-            var productRepository = serviceProvider.GetRequiredService<IProductRepository>();
 
-            if (productRepository.GetProducts().Any())
+            var productRepository = serviceProvider.GetRequiredService<IProductRepository>();
+            var retrievedProducts = await productRepository.GetProducts();
+            if (retrievedProducts.Any())
             {
                 return;   // Data was already seeded
             }

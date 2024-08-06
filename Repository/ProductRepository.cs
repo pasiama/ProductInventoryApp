@@ -1,4 +1,6 @@
-﻿using ProductInventoryApp.DatabaseContext;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
+using ProductInventoryApp.DatabaseContext;
 using ProductInventoryApp.Interfaces;
 using ProductInventoryApp.Models;
 
@@ -8,28 +10,58 @@ namespace ProductInventoryApp.Repository
     {
         private readonly List<Product> _products = new List<Product>();
         private readonly ApplicationContext _context;
-        public ProductRepository(ApplicationContext context) {
+        private readonly ILogger<ProductRepository> _logger;
+        public ProductRepository(ApplicationContext context, ILogger<ProductRepository>logger) {
         _context = context;
+            _logger = logger;
         }
-
+       
         public async Task<List<Product>>  GetProducts()
         {
             try
             {
-                return _context.Products.OrderBy(p => p.Id).ToList();
+                var products = await _context.Products.ToListAsync();
+                return products;
             } 
+            
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.LogError(ex.Message);
                 return new List<Product>();
             }
             
         }
 
-        public void Add(Product product)
+        public async Task<Product> Add(Product product)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            try {
+                // Get the current highest Id
+               // var maxId = await _context.Products.MaxAsync(p => (int?)p.InventoryId) ?? 0;
+               // product.InventoryId = maxId + 1;
+
+                var products = await _context.Products.AddAsync(product);
+                _context.SaveChanges();
+                return product;
+            } catch (Exception ex) {
+                _logger.LogError(ex.Message);
+                return new Product();
+            }
+         
+          
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            try
+            {
+                var saved = await _context.SaveChangesAsync();
+                return saved;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return 0;
+            }
         }
 
         public bool CreateProduct(Product product)
@@ -37,20 +69,21 @@ namespace ProductInventoryApp.Repository
             _context.Add(product);
             return Save();
         }
-        public async Task<Product> GetById(int Productid)
+        public async Task<Product> GetById(string Productid)
         {
             try 
-            {
-                return  _context.Products.Where(p => p.Id == Productid).FirstOrDefault();
+            { 
+                var product =  _context.Products.Where(p => p.Id == Productid).FirstOrDefault();
+                return product; 
             } catch (Exception ex)
             {
-            Console.WriteLine(ex.Message);
+           _logger.LogError($"Error {ex.Message}");
                 return new Product();
             }
             
         }
 
-        public bool ProductExists(int id)
+        public bool ProductExists(string id)
         {
             return _context.Products.Any(p => p.Id == id);
         }
@@ -112,15 +145,14 @@ namespace ProductInventoryApp.Repository
             try
             {
 
-               _context.Products.Remove(product);
+              _context.Products.Remove(product);
                 _context.SaveChanges();
                 return product;
             } catch (Exception ex) {
-               Console.WriteLine(ex.Message);
+                _logger.LogError(ex.Message);
                 return new Product();
             }
         }
-
 
 
         public  bool  Save()
@@ -129,24 +161,52 @@ namespace ProductInventoryApp.Repository
             return saved >= 0 ? true : false;
         }
 
-        Product IProductRepository.CreateProduct(Product product)
+        public async Task<bool> UpdateProduct(Product product)
         {
-            throw new NotImplementedException();
+            try {
+
+                var existingProduct = _context.Products.Find(product.Id);
+                if (existingProduct != null)
+                {
+                    existingProduct.Name = product.Name;
+                    existingProduct.Description = product.Description ?? string.Empty;
+                    existingProduct.Price = product.Price;
+                    existingProduct.Quantity = product.Quantity;
+                    existingProduct.UpdatedBy = product.UpdatedBy;
+                    existingProduct.UpdatedAt = product.UpdatedAt;
+                    
+                    return Save();
+                }
+               _context.Products.Update(product);
+                return false;
+            }
+            catch(Exception ex ) {
+            _logger.LogError($"{ex.Message}");
+                return false;
+            }
+           
         }
 
-        public bool UpdateProduct(Product product)
+        public async Task<Product?> Delete(string id)
         {
-            _context.Products.Update(product);
-            return Save();
+            try {
+                var product = await _context.Products.FindAsync(id);
+                if (product == null)
+                {
+                    return null;
+                }
+
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+
+                return product;
+            } catch (Exception ex) {
+            _logger.LogError(ex.Message);
+                return null;
+            }
+           
         }
 
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-       
 
 
 
@@ -170,6 +230,6 @@ namespace ProductInventoryApp.Repository
             throw new NotImplementedException();
         }
 
-      
+       
     } 
 }

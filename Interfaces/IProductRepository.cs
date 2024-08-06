@@ -1,28 +1,33 @@
-﻿using ProductInventoryApp.Models;
+﻿using ProductInventoryApp.DTO;
+using ProductInventoryApp.Models;
 
 namespace ProductInventoryApp.Interfaces
 {
     public interface IProductRepository
     {
-        Task<List<Product>> GetProducts();
-        Task<Product> GetById(int Productid);
+       public Task<List<Product>> GetProducts();
+       public Task<Product> GetById(string Productid);
 
-        Product GetByName(string name);
+      public Product GetByName(string name);
 
-        Product GetByDescription(string description);
-        Product GetByPrice(decimal price);
-        Product GetByQuantity(int quantity);
-        bool ProductExists(int id);
-        Product CreateProduct(Product product);
-        bool Save();
-
-
-        bool UpdateProduct(Product product);
-
-        Task<Product> DeleteProduct(Product product);
+      public  Product GetByDescription(string description);
+       public Product GetByPrice(decimal price);
+       public Product GetByQuantity(int quantity);
+      public  bool ProductExists(string id);
+        public bool CreateProduct(Product product);
+      public  bool Save();
 
 
-        void Add(Product product);
-        void Delete(int id);
+         public Task<bool> UpdateProduct(Product product);
+
+        public Task<Product> DeleteProduct(Product product);
+
+
+        public Task<Product> Add(Product product);
+
+      public  Task<int> SaveChanges();
+
+       Task<Product> Delete(string id);
+        //Task<Product> Update(int id);
     }
 }

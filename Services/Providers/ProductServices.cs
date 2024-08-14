@@ -172,6 +172,41 @@ namespace ProductInventoryApp.Services.Providers
             }
         }
 
+        public async Task<ProductResponseDto> GetPaginationProducts(int page, int pageSize)
+        {
+            try
+            {
+                // Apply pagination
+                var products = _productRepository.GetProducts()
+                                                 .Skip((page - 1) * pageSize)
+                                                 .Take(pageSize);
+
+                var totalProductCount = await _productRepository.GetProducts().CountAsync();
+                var overallTotalAmount = products.Sum(p => p.Total);
+                var totalProfits = products.Sum(p => p.ProductProfit);
+                var totalVat = products.Sum(p => p.ProductVat);
+
+                var productList = await products.ToListAsync();
+
+                var results = new ProductResponseDto
+                {
+                    OverallTotalAmount = overallTotalAmount,
+                    TotalProductCount = totalProductCount,
+                    TotalProfits = totalProfits,
+                    TotalVat = totalVat,
+                    Products = productList,
+                };
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new ProductResponseDto();
+            }
+        }
+
+
         public class ProductResponseDto
         {
             public List<Product> Products { get; set; } = new List<Product>();
@@ -207,7 +242,7 @@ namespace ProductInventoryApp.Services.Providers
                     Description = productDto.Description ?? string.Empty,
                     Price = productDto.Price,
                     Quantity = productDto.Quantity,
-                    UpdatedBy = productDto.UpdatedBy,
+                    //UpdatedBy = productDto.UpdatedBy,
                   
 
                         Category = productDto.Category,

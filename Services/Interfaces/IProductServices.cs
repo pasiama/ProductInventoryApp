@@ -9,7 +9,7 @@ namespace ProductInventoryApp.Services.Interfaces
     {
        public Task<ProductResponseDto> GetProducts();
 
-
+        public Task<ProductResponseDto> GetPaginationProducts(int page, int pageSize);
 
        public Task<Product> GetProduct(string id);
 

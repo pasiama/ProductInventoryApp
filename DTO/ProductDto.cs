@@ -19,15 +19,15 @@ namespace ProductInventoryApp.DTO
         public string Availability { get; set; }
         public string Description { get; set; } = string.Empty;
 
-        public string? CreatedBy { get; set; }
-        public string? UpdatedBy { get; set; }
+       // public string? CreatedBy { get; set; }
+       // public string? UpdatedBy { get; set; }
         public decimal Total {  get; set; }
 
-        public decimal ProductVat { get; set; }
+       // public decimal ProductVat { get; set; }
 
-        public decimal ProductProfit { get; set; }
+       // public decimal ProductProfit { get; set; }
 
-        public decimal ProductUnitSellingPrice {  set; get; }
+       // public decimal ProductUnitSellingPrice {  set; get; }
 
 
 
@@ -42,7 +42,7 @@ namespace ProductInventoryApp.DTO
         // Computed property: unit selling price is the sum of the price, VAT, and profit
         public decimal UnitSellingPrice => Price + Vat + Profit;
 
-        public decimal TotalAmount => ProductUnitSellingPrice * Quantity;
+        public decimal TotalAmount => UnitSellingPrice * Quantity;
 
     }
 }

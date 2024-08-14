@@ -7,6 +7,7 @@ namespace ProductInventoryApp.Interfaces
     public interface IProductRepository
     {
        public IQueryable<Product> GetProducts();
+        public IQueryable<Product> GetPaginationProducts();
        public Task<Product> GetById(string Productid);
 
       public Product GetByName(string name);

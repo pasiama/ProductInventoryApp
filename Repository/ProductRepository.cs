@@ -34,6 +34,23 @@ namespace ProductInventoryApp.Repository
             
         }
 
+        public IQueryable<Product> GetPaginationProducts()
+        {
+            try
+            {
+                var products = _context.Products.AsNoTracking().AsQueryable();
+                return products.AsQueryable();
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Enumerable.Empty<Product>().AsQueryable();
+            }
+
+        }
+
+       
         public async Task<int> TotalProductCount() => await _context.Products.CountAsync();
 
         public async Task<Product> Add(Product product)

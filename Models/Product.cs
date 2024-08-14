@@ -55,6 +55,6 @@ namespace ProductInventoryApp.Models
 
         public decimal TotalAmount 
         {
-            get { return ProductUnitSellingPrice * Quantity; } }
+            get { return UnitSellingPrice * Quantity; } }
     }
 }

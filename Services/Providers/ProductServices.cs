@@ -9,6 +9,7 @@ using ProductInventoryApp.Interfaces;
 using ProductInventoryApp.Models;
 using ProductInventoryApp.Repository;
 using ProductInventoryApp.Services.Interfaces;
+using System.Linq.Expressions;
 
 namespace ProductInventoryApp.Services.Providers
 {
@@ -17,7 +18,7 @@ namespace ProductInventoryApp.Services.Providers
         private readonly IProductRepository _productRepository;
         private readonly ILogger<ProductServices> _logger;
 
-        public ProductServices(IProductRepository productRepository, ILogger<ProductServices>logger)
+        public ProductServices(IProductRepository productRepository, ILogger<ProductServices> logger)
         {
             _productRepository = productRepository;
             _logger = logger;
@@ -27,15 +28,23 @@ namespace ProductInventoryApp.Services.Providers
         {
             try
             {
-              var product = new Product
+                var product = new Product
                 {
                     Name = productDto.Name,
                     Description = productDto.Description ?? string.Empty,
                     Price = productDto.Price,
                     Quantity = productDto.Quantity,
-                    CreatedBy = productDto.CreatedBy,
+                    CreatedBy = Auth.GetUser(),
+
+                    Category = productDto.Category,
+                    ProductUrl = productDto.ProductUrl,
+                    Availability = productDto.Availability,
                     Total = productDto.TotalAmount,
-                   };
+                    ProductVat = productDto.Vat,
+                    ProductProfit = productDto.Profit,
+                    ProductUnitSellingPrice = productDto.UnitSellingPrice,
+
+                };
                 await _productRepository.Add(product);
                 var results = product.Adapt<Product>();
                 return results;
@@ -48,11 +57,24 @@ namespace ProductInventoryApp.Services.Providers
             }
         }
 
+        public async Task<int> GetTotalProductCount()
+        {
+            try {
+                var totalProducts = await _productRepository.TotalProductCount();
+                return totalProducts;
+            }
+            catch (Exception ex) {
+                _logger.LogError($"{ex.Message}");
+                return 0;
+            }
+
+        }
+
         //database normalization
 
         public async Task<Product?> CreateProduct(ProductRequestDto productDto)
         {
-            try 
+            try
             {
                 if (productDto == null)
                 {
@@ -64,15 +86,22 @@ namespace ProductInventoryApp.Services.Providers
                     _logger.LogInformation("Product name is required ");
                     return null;
                 }
-                    var products = new Product
+                var products = new Product
                 {
-                   
+
                     Name = productDto.Name,
                     Description = productDto.Description ?? string.Empty,
                     Price = productDto.Price,
                     Quantity = productDto.Quantity,
                     CreatedBy = Auth.GetUser(),
+                   
+                    Category = productDto.Category,
+                    ProductUrl = productDto.ProductUrl,
+                    Availability = productDto.Availability,
                     Total = productDto.TotalAmount,
+                    ProductVat = productDto.Vat,
+                    ProductProfit = productDto.Profit,
+                    ProductUnitSellingPrice = productDto.UnitSellingPrice,
                 };
 
                 await _productRepository.Add(products);
@@ -85,17 +114,17 @@ namespace ProductInventoryApp.Services.Providers
                 }
 
                 return new Product();
-            } 
-                catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 _logger.LogError(ex.Message);
                 throw;
             }
-           
+
         }
 
         public async Task<Product?> GetProduct(string id)
         {
-            try 
+            try
             {
                 var product = await _productRepository.GetById(id);
                 if (_productRepository.GetProducts() == null)
@@ -103,26 +132,55 @@ namespace ProductInventoryApp.Services.Providers
                     _logger.LogInformation("There are no products to be displayed");
                     return null;
                 }
-                    return product;
+                return product;
             }
-                catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message);
                 throw;
             }
         }
 
-        public async Task<List<Product>> GetProducts()
+        public async Task<ProductResponseDto> GetProducts()
         {
             try {
-                var products = await _productRepository.GetProducts();
-                return products;
+                var products = _productRepository.GetProducts();
+                var totalProductCount = products.Count();
+                var overallTotalAmount = products.Sum(p => p.Total);
+
+                var totalProfits = products.Sum(p => p.ProductProfit);
+                var totalVat = products.Sum(p => p.ProductVat);
+
+                var productList = await products.ToListAsync();
+
+                var results = new ProductResponseDto
+                {
+                    OverallTotalAmount = overallTotalAmount,
+                    TotalProductCount = totalProductCount,
+                    TotalProfits = totalProfits,
+                    TotalVat = totalVat,
+                    Products = productList,
+                };
+
+                    
+
+                return results;
+
             } catch (Exception ex) {
                 _logger.LogError(ex.Message);
-                return null;
+                return new ProductResponseDto();
             }
         }
 
+        public class ProductResponseDto
+        {
+            public List<Product> Products { get; set; } = new List<Product>();
+            public int TotalProductCount { get; set; }
+            public decimal OverallTotalAmount { get; set; }
+            public decimal TotalProfits {get; set;}
+            public decimal TotalVat{ get; set;}
+
+        }
         public bool ProductExists(string id)
         {
             var product = _productRepository.ProductExists(id);
@@ -149,8 +207,17 @@ namespace ProductInventoryApp.Services.Providers
                     Description = productDto.Description ?? string.Empty,
                     Price = productDto.Price,
                     Quantity = productDto.Quantity,
-                    UpdatedBy = productDto.UpdatedBy
-                 };
+                    UpdatedBy = productDto.UpdatedBy,
+                  
+
+                        Category = productDto.Category,
+                        ProductUrl = productDto.ProductUrl,
+                        Availability = productDto.Availability,
+                        Total = productDto.TotalAmount,
+                        ProductVat = productDto.Vat,
+                        ProductProfit = productDto.Profit,
+                        ProductUnitSellingPrice = productDto.UnitSellingPrice,
+                    };
                  var results = _productRepository.UpdateProduct(product);
                  var count = await _productRepository.SaveChanges();
 

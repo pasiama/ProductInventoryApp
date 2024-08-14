@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductInventoryApp.DTO;
 using ProductInventoryApp.Models;
+using static ProductInventoryApp.Services.Providers.ProductServices;
 
 namespace ProductInventoryApp.Services.Interfaces
 {
     public interface IProductServices 
     {
-       public  Task<List<Product>> GetProducts();
+       public Task<ProductResponseDto> GetProducts();
 
 
 
@@ -20,6 +21,9 @@ namespace ProductInventoryApp.Services.Interfaces
       public  Task<Product> Add(ProductRequestDto productDto);
 
        public Task<Product>CreateProduct(ProductRequestDto productDto);
+
+        public Task<int> GetTotalProductCount();
+      
 
         //public  Task<Product> Delete(string id);
     }

@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using ProductInventoryApp.Constants;
 using ProductInventoryApp.DatabaseContext;
 using ProductInventoryApp.Interfaces;
 using ProductInventoryApp.Models;
@@ -16,21 +18,23 @@ namespace ProductInventoryApp.Repository
             _logger = logger;
         }
        
-        public async Task<List<Product>>  GetProducts()
+        public IQueryable <Product>  GetProducts()
         {
             try
             {
-                var products = await _context.Products.ToListAsync();
-                return products;
+               var products =  _context.Products.AsNoTracking().AsQueryable();
+                return products.AsQueryable();
             } 
             
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Product>();
+                return Enumerable.Empty<Product>().AsQueryable();
             }
             
         }
+
+        public async Task<int> TotalProductCount() => await _context.Products.CountAsync();
 
         public async Task<Product> Add(Product product)
         {
@@ -173,7 +177,15 @@ namespace ProductInventoryApp.Repository
                     existingProduct.Price = product.Price;
                     existingProduct.Quantity = product.Quantity;
                     existingProduct.UpdatedBy = product.UpdatedBy;
-                    existingProduct.UpdatedAt = product.UpdatedAt;
+
+
+                    existingProduct.Category = product.Category;
+                    existingProduct.ProductUrl = product.ProductUrl;
+                    existingProduct.Availability = product.Availability;
+                    existingProduct.Total = product.TotalAmount;
+                    existingProduct.ProductVat = product.Vat;
+                    existingProduct.ProductProfit = product.Profit;
+                    existingProduct.ProductUnitSellingPrice = product.UnitSellingPrice;
                     
                     return Save();
                 }
@@ -193,7 +205,7 @@ namespace ProductInventoryApp.Repository
                 var product = await _context.Products.FindAsync(id);
                 if (product == null)
                 {
-                    return null;
+                    return new Product();
                 }
 
                 _context.Products.Remove(product);
@@ -202,7 +214,7 @@ namespace ProductInventoryApp.Repository
                 return product;
             } catch (Exception ex) {
             _logger.LogError(ex.Message);
-                return null;
+                return new Product();
             }
            
         }

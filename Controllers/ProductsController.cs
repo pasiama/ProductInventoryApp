@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProductInventoryApp.DatabaseContext;
 using ProductInventoryApp.DTO;
 using ProductInventoryApp.Interfaces;
 using ProductInventoryApp.Models;
 using ProductInventoryApp.Services.Interfaces;
 using ProductInventoryApp.Services.Providers;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Net.Mime;
+using System.Security.Claims;
+using static ProductInventoryApp.Services.Providers.ProductServices;
 
 namespace ProductInventoryApp.Controllers
 {
-   
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     [Route("api/[controller]")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(Product))]
@@ -39,12 +46,13 @@ namespace ProductInventoryApp.Controllers
         [HttpGet("allProducts")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ProductResponseDto>))]
 
         public async Task<IActionResult> GetProducts()
         {
-            var products = await _productServices.GetProducts();
-            return Ok(products);
+            var results = await _productServices.GetProducts();
+            
+            return Ok(results);
         }
 
         [HttpPost("createProduct")]

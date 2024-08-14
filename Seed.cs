@@ -12,7 +12,7 @@ namespace ProductInventoryApp
         {
 
             var productRepository = serviceProvider.GetRequiredService<IProductRepository>();
-            var retrievedProducts = await productRepository.GetProducts();
+            var retrievedProducts = productRepository.GetProducts();
             if (retrievedProducts.Any())
             {
                 return;   // Data was already seeded
@@ -20,9 +20,9 @@ namespace ProductInventoryApp
 
             var products = new List<Product>
             {
-                new Product { Id = "Guid.NewGuid()" , Name = "Product1", Price = 10.0m, Quantity = 100, CreatedBy= "Phoebe", UpdatedBy="Dela" , UpdatedAt=DateTime.Now, Total=10.0m},
-                new Product { Id = "Guid.NewGuid()"  , Name = "Product2", Price = 20.0m, Quantity = 200, CreatedBy= "Phoebe", UpdatedBy="Dela", UpdatedAt=DateTime.Now, Total=10.0m },
-                new Product {Id = "Guid.NewGuid()", Name = "Product3", Price = 30.0m, Quantity = 300, CreatedBy= "Phoebe", UpdatedBy="Dela", UpdatedAt=DateTime.Now, Total=10.0m }
+                new Product { Id = "Guid.NewGuid()" , Name = "Product1", Price = 10.0m, Quantity = 100, CreatedBy= "Phoebe", UpdatedBy="Dela" , Availability="in stock" ,ProductUrl="pgote", Category="book" , Total=10m , ProductProfit=1m, ProductVat=3m,},
+                new Product { Id = "Guid.NewGuid()"  , Name = "Product2", Price = 20.0m, Quantity = 200, CreatedBy= "Phoebe", UpdatedBy="Dela", Availability="in stock" ,ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=1m,  ProductVat=3m },
+                new Product {Id = "Guid.NewGuid()", Name = "Product3", Price = 30.0m, Quantity = 300, CreatedBy= "Phoebe", UpdatedBy="Dela",Availability="in stock" , ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=2m,  ProductVat=3m }
             };
 
             foreach (var product in products)
@@ -30,6 +30,8 @@ namespace ProductInventoryApp
                 productRepository.Add(product);
             }
         }
+
+
 
         internal void SeedApplicationContext(ServiceProvider serviceProvider)
         {

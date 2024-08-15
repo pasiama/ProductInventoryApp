@@ -96,7 +96,7 @@ namespace ProductInventoryApp.Services.Providers
                     CreatedBy = Auth.GetUser(),
                    
                     Category = productDto.Category,
-                    ProductUrl = productDto.ProductUrl,
+                    ProductUrl = productDto.ProductUrl ?? string.Empty,
                     Availability = productDto.Availability,
                     Total = productDto.TotalAmount,
                     ProductVat = productDto.Vat,
@@ -132,6 +132,7 @@ namespace ProductInventoryApp.Services.Providers
                     _logger.LogInformation("There are no products to be displayed");
                     return null;
                 }
+               
                 return product;
             }
             catch (Exception ex)
@@ -206,6 +207,10 @@ namespace ProductInventoryApp.Services.Providers
             }
         }
 
+        
+
+
+
 
         public class ProductResponseDto
         {
@@ -242,8 +247,8 @@ namespace ProductInventoryApp.Services.Providers
                     Description = productDto.Description ?? string.Empty,
                     Price = productDto.Price,
                     Quantity = productDto.Quantity,
-                    //UpdatedBy = productDto.UpdatedBy,
-                  
+                        //UpdatedBy = productDto.UpdatedBy,
+                    UpdatedBy = Auth.GetUser(),
 
                         Category = productDto.Category,
                         ProductUrl = productDto.ProductUrl,

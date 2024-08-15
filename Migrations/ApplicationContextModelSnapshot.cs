@@ -235,6 +235,9 @@ namespace ProductInventoryApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
@@ -265,6 +268,9 @@ namespace ProductInventoryApp.Migrations
 
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");

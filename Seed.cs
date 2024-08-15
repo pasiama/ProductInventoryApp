@@ -20,9 +20,9 @@ namespace ProductInventoryApp
 
             var products = new List<Product>
             {
-                new Product { Id = "Guid.NewGuid()" , Name = "Product1", Price = 10.0m, Quantity = 100, CreatedBy= "Phoebe", UpdatedBy="Dela" , Availability="in stock" ,ProductUrl="pgote", Category="book" , Total=10m , ProductProfit=1m, ProductVat=3m,},
-                new Product { Id = "Guid.NewGuid()"  , Name = "Product2", Price = 20.0m, Quantity = 200, CreatedBy= "Phoebe", UpdatedBy="Dela", Availability="in stock" ,ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=1m,  ProductVat=3m },
-                new Product {Id = "Guid.NewGuid()", Name = "Product3", Price = 30.0m, Quantity = 300, CreatedBy= "Phoebe", UpdatedBy="Dela",Availability="in stock" , ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=2m,  ProductVat=3m }
+                new Product { Id = "Guid.NewGuid()" , Name = "Product1", Price = 10.0m, Quantity = 100, CreatedBy= "Phoebe" , CreatedAt= DateTime.Now, UpdatedAt=DateTime.Now, UpdatedBy="Dela" , Availability="in stock" ,ProductUrl="pgote", Category="book" , Total=10m , ProductProfit=1m, ProductVat=3m,},
+                new Product { Id = "Guid.NewGuid()"  , Name = "Product2", Price = 20.0m, Quantity = 200, CreatedBy= "Phoebe",CreatedAt= DateTime.Now, UpdatedAt=DateTime.Now, UpdatedBy="Dela", Availability="in stock" ,ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=1m,  ProductVat=3m },
+                new Product {Id = "Guid.NewGuid()", Name = "Product3", Price = 30.0m, Quantity = 300, CreatedBy= "Phoebe", CreatedAt= DateTime.Now, UpdatedAt=DateTime.Now , UpdatedBy="Dela",Availability="in stock" , ProductUrl="pgote",  Category="book", Total=10m, ProductProfit=2m,  ProductVat=3m }
             };
 
             foreach (var product in products)

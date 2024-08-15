@@ -12,8 +12,8 @@ using ProductInventoryApp.DatabaseContext;
 namespace ProductInventoryApp.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240814010006_updatedInventory")]
-    partial class updatedInventory
+    [Migration("20240815135411_initialCreateInventory")]
+    partial class initialCreateInventory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,6 +238,9 @@ namespace ProductInventoryApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
@@ -268,6 +271,9 @@ namespace ProductInventoryApp.Migrations
 
                     b.Property<decimal>("Total")
                         .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");

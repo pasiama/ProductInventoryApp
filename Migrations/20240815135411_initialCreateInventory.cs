@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ProductInventoryApp.Migrations
 {
     /// <inheritdoc />
-    public partial class updatedInventory : Migration
+    public partial class initialCreateInventory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,6 +65,8 @@ namespace ProductInventoryApp.Migrations
                     Availability = table.Column<string>(type: "text", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     UpdatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Total = table.Column<decimal>(type: "numeric", nullable: false),
                     ProductVat = table.Column<decimal>(type: "numeric", nullable: false),
                     ProductProfit = table.Column<decimal>(type: "numeric", nullable: false),

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProductInventoryApp.Common;
 using ProductInventoryApp.DTO;
 using ProductInventoryApp.Models;
 
@@ -8,6 +9,8 @@ namespace ProductInventoryApp.Interfaces
     {
        public IQueryable<Product> GetProducts();
         public IQueryable<Product> GetPaginationProducts();
+
+        public Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize, string searchTerm);
        public Task<Product> GetById(string Productid);
 
       public Product GetByName(string name);

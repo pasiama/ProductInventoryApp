@@ -33,8 +33,8 @@ namespace ProductInventoryApp.Models
         public string Availability { get; set; }
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; } 
-        public DateTime? CreatedAt { get; } = DateTime.Now;
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public decimal Total { get; set; }
 
         public decimal ProductVat { get; set; }

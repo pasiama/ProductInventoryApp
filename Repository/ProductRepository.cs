@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using ProductInventoryApp.Common;
 using ProductInventoryApp.Constants;
 using ProductInventoryApp.DatabaseContext;
 using ProductInventoryApp.Interfaces;
@@ -50,7 +51,25 @@ namespace ProductInventoryApp.Repository
 
         }
 
-       
+        public async Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize, string searchTerm)
+        {
+            try {
+                IQueryable<Product> query = _context.Products.AsNoTracking().AsQueryable();
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(p => EF.Functions.Like(p.Name, $"%{searchTerm}") );
+                }
+
+                var Results = await PaginatedList<Product>.ToPagedList( query, page, pageSize );
+            return Results;
+
+            } catch (Exception ex) {
+            _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
+
         public async Task<int> TotalProductCount() => await _context.Products.CountAsync();
 
         public async Task<Product> Add(Product product)
@@ -193,11 +212,12 @@ namespace ProductInventoryApp.Repository
                     existingProduct.Description = product.Description ?? string.Empty;
                     existingProduct.Price = product.Price;
                     existingProduct.Quantity = product.Quantity;
-                    existingProduct.UpdatedBy = product.UpdatedBy;
+                    existingProduct.UpdatedBy = Auth.GetUser();
+                    existingProduct.UpdatedAt = DateTime.Now;
 
 
                     existingProduct.Category = product.Category;
-                    existingProduct.ProductUrl = product.ProductUrl;
+                    existingProduct.ProductUrl = product.ProductUrl ?? string.Empty;
                     existingProduct.Availability = product.Availability;
                     existingProduct.Total = product.TotalAmount;
                     existingProduct.ProductVat = product.Vat;

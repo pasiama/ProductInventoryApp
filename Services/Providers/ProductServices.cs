@@ -173,29 +173,29 @@ namespace ProductInventoryApp.Services.Providers
             }
         }
 
+       
+
         public async Task<ProductResponseDto> GetPaginationProducts(int page, int pageSize)
         {
             try
             {
                 // Apply pagination
-                var products = _productRepository.GetProducts()
-                                                 .Skip((page - 1) * pageSize)
-                                                 .Take(pageSize);
+                var products = await _productRepository.GetAllProductWithPagination(page, pageSize) ?? Enumerable.Empty<Product>() ;
 
-                var totalProductCount = await _productRepository.GetProducts().CountAsync();
-                var overallTotalAmount = products.Sum(p => p.Total);
-                var totalProfits = products.Sum(p => p.ProductProfit);
-                var totalVat = products.Sum(p => p.ProductVat);
+                var totalProductCount = await _productRepository.GetAllProductWithPagination(page, pageSize) ?? Enumerable.Empty<Product>();
+                var overallTotalAmount =  products.Sum(p => p.Total);
+                var totalProfits =  products.Sum(p => p.ProductProfit);
+                var totalVat =  products.Sum(p => p.ProductVat);
 
-                var productList = await products.ToListAsync();
+                var productList =  products;
 
                 var results = new ProductResponseDto
                 {
                     OverallTotalAmount = overallTotalAmount,
-                    TotalProductCount = totalProductCount,
+                    TotalProductCount = totalProductCount.Count(),
                     TotalProfits = totalProfits,
                     TotalVat = totalVat,
-                    Products = productList,
+                    Products = (List<Product>)productList,
                 };
 
                 return results;

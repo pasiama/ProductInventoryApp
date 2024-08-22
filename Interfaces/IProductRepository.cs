@@ -10,7 +10,9 @@ namespace ProductInventoryApp.Interfaces
        public IQueryable<Product> GetProducts();
         public IQueryable<Product> GetPaginationProducts();
 
-        public Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize, string searchTerm);
+        public IQueryable<Product> GetPaginatedProducts(int pageSize, int page);
+
+        public Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize);
        public Task<Product> GetById(string Productid);
 
       public Product GetByName(string name);

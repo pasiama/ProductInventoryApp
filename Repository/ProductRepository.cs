@@ -24,7 +24,7 @@ namespace ProductInventoryApp.Repository
             try
             {
                var products =  _context.Products.AsNoTracking().AsQueryable();
-                return products.AsQueryable();
+                return products;
             } 
             
             catch (Exception ex)
@@ -33,6 +33,27 @@ namespace ProductInventoryApp.Repository
                 return Enumerable.Empty<Product>().AsQueryable();
             }
             
+        }
+
+
+        public IQueryable<Product> GetPaginatedProducts(int pageSize, int page)
+        {
+            try
+            {
+                var products = _context.Products
+                                .AsNoTracking()
+                                .AsQueryable()
+                                .Skip((page - 1) * pageSize)
+                                .Take(pageSize);
+                return products;
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Enumerable.Empty<Product>().AsQueryable();
+            }
+
         }
 
         public IQueryable<Product> GetPaginationProducts()
@@ -51,14 +72,14 @@ namespace ProductInventoryApp.Repository
 
         }
 
-        public async Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize, string searchTerm)
+        public async Task<PaginatedList<Product>> GetAllProductWithPagination(int page, int pageSize)
         {
             try {
                 IQueryable<Product> query = _context.Products.AsNoTracking().AsQueryable();
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    query = query.Where(p => EF.Functions.Like(p.Name, $"%{searchTerm}") );
-                }
+                //if (!string.IsNullOrEmpty(searchTerm))
+                //{
+                //    query = query.Where(p => EF.Functions.Like(p.Name, $"%{searchTerm}") );
+                //}
 
                 var Results = await PaginatedList<Product>.ToPagedList( query, page, pageSize );
             return Results;

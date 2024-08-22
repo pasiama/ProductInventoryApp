@@ -59,9 +59,9 @@ namespace ProductInventoryApp.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(200, Type = typeof(ProductResponseDto))]
-        public async Task<IActionResult> GetPaginationProducts(int page , int pageSize )
+        public async Task<IActionResult> GetPaginationProducts(int page, int pageSize)
         {
-            var results = await _productServices.GetPaginationProducts(page, pageSize);
+            var results = await _productServices.GetPaginationProducts( page, pageSize);
 
             return Ok(results);
         }
